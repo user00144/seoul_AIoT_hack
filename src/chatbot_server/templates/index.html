@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>서울시 공원 안내 챗봇</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+        }
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            height: calc(100vh - 120px); /* 입력창을 피해서 출력 창 높이를 조정 */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        .chat-bubble {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            transition: all 0.3s ease;
+        }
+        .chat-bubble.user {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+        }
+        .chat-bubble.bot {
+            background-color: #e9ecef;
+            color: black;
+            align-self: flex-start;
+        }
+        .chat-bubble.loading {
+            background-color: #f0f0f0;
+            color: gray;
+            text-align: center;
+        }
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: white;
+            padding: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center my-3">서울시 공원 안내 챗봇</h2>
+            <div id="chat" class="chat-container">
+                {% for message in conversation %}
+                    <div class="chat-bubble {{ 'user' if message.user else 'bot' }}">
+                        <strong>{{ 'You' if message.user else 'AI' }}:</strong> {{ message.user if message.user else message.bot }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="input-container">
+        <form id="chat-form" class="d-flex">
+            <input id="question" name="question" type="text" class="form-control me-2" placeholder="Ask something..." required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#chat-form').on('submit', function (e) {
+                e.preventDefault();
+                var question = $('#question').val();
+                
+                // 사용자 질문 말풍선 추가
+                var chatContainer = $('#chat');
+                chatContainer.append('<div class="chat-bubble user"><strong>You:</strong> ' + question + '</div>');
+                chatContainer.scrollTop(chatContainer[0].scrollHeight);
+                
+                // 로딩 중 말풍선 추가
+                var loadingBubble = $('<div class="chat-bubble bot loading"><div class="loader"></div> <span>AI is typing...</span></div>');
+                chatContainer.append(loadingBubble);
+                chatContainer.scrollTop(chatContainer[0].scrollHeight);
+
+                $('#question').val('');
+
+                // 서버로 질문 전송
+                $.ajax({
+                    url: '/ask',
+                    type: 'POST',
+                    data: { question: question },
+                    success: function (response) {
+                        // 로딩 중 말풍선 제거
+                        loadingBubble.remove();
+
+                        // AI 답변 추가
+                        chatContainer.append('<div class="chat-bubble bot"><strong>AI:</strong> ' + response.bot + '</div>');
+                        
+                        // 채팅창을 자동으로 스크롤 다운
+                        chatContainer.scrollTop(chatContainer[0].scrollHeight);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

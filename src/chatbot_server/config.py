@@ -1,0 +1,7 @@
+HUGGING_TOKKEN = ""
+BASE_MODEL = "MLP-KTLim/llama-3-Korean-Bllossom-8B"
+DATASET = "/workspace/park_data/processed_data.csv"
+FAST_EMBED_MODEL_NAME = "BAAI/bge-small-en-v1.5"
+SYSTEM_PROMPT = "당신은 서울시의 공원 안내인입니다. 질문을 요약하고 주어진 문맥을 이용하여 친절하게 답하세요. 문맥에 존재하는 주소, 관리부서 등은 질문에서 물어보지 않으면 답하지 않아도 됩니다."
+QUERY_WRAPPER_PROMPT = "<|USER|>{query_str}<|ASSISTANT|>"
+ENCODER_MODEL = "cross-encoder/ms-marco-MiniLM-L-2-v2"
