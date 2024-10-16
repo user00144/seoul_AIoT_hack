@@ -5,7 +5,8 @@ ___
 ![image](https://github.com/user-attachments/assets/ef3e50af-bed8-4aa6-830e-b774d2e2f436)
 
 
-## SafeScape - Detect potential harzards in parks
+## SafeScape : AIoT-based park potential hazard monitoring platform
+
 > **Competition** , **Sep. 2024 ~ Oct. 2024**
 
 ---
@@ -19,7 +20,7 @@ ___
 ## Competition Topic
 
 - Developing software to improve convenience in Seoul's parks
-- **Our software : SafeScape- Detect potential hazards in parks**
+- **Our software : SafeScape : AIoT-based park potential hazard monitoring platform**
 - The competition took place overnight on October 10th and 11th.
 
 ---
